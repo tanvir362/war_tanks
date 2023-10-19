@@ -6,6 +6,7 @@ pygame.init()
 
 WIDTH, HEIGHT = 1000, 600
 TANK_WIDTH, TANK_HEIGHT = 60, 60
+BULLET_SIZE = 10
 WHITE = (255, 255, 255)
 GRASS_GREEN = (124, 252, 0)
 BLACK = (0, 0, 0)
@@ -53,9 +54,21 @@ player2 = pygame.Rect(px, py, TANK_WIDTH, TANK_HEIGHT)
 
 tank1_angle, tank2_angle = 0, 180
 
-def create_bullet(player:pygame.Rect):
+def create_bullet(player:pygame.Rect, angle):
+    bx, by, = player.x+player.width, player.y+player.height/2-BULLET_SIZE/2
 
-    return pygame.Rect(player.x+player.width, player.y+player.height/2-5, 10, 10)
+    if angle == 180:
+        bx, by = player.x-BULLET_SIZE, player.y+player.height/2-BULLET_SIZE/2
+
+    elif angle == 90:
+        bx, by = player.x+player.width/2-BULLET_SIZE/2, player.y-BULLET_SIZE
+
+    elif angle == -90:
+        bx, by = player.x+player.width/2-BULLET_SIZE/2, player.y+player.height
+
+
+
+    return pygame.Rect(bx, by, BULLET_SIZE, 10)
 
 def draw():
     global tank1
@@ -145,7 +158,12 @@ def main():
 
                 if event.key == pygame.K_q:
                     bullets.append(
-                        (create_bullet(player1), get_dir(tank1_angle))
+                        (create_bullet(player1, tank1_angle), get_dir(tank1_angle))
+                    )
+
+                if event.key == pygame.K_SLASH:
+                    bullets.append(
+                        (create_bullet(player2, tank2_angle), get_dir(tank2_angle))
                     )
 
         key_pressed = pygame.key.get_pressed()
