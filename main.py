@@ -56,31 +56,21 @@ player2 = pygame.Rect(px, py, TANK_WIDTH, TANK_HEIGHT)
 
 tank1_angle, tank2_angle = 0, 180
 
-def create_bullet(player:pygame.Rect, angle):
-    bx, by, = player.x+player.width, player.y+player.height/2-BULLET_SIZE/2
 
-    if angle == 180:
-        bx, by = player.x-BULLET_SIZE, player.y+player.height/2-BULLET_SIZE/2
-
-    elif angle == 90:
-        bx, by = player.x+player.width/2-BULLET_SIZE/2, player.y-BULLET_SIZE
-
-    elif angle == -90:
-        bx, by = player.x+player.width/2-BULLET_SIZE/2, player.y+player.height
-
-
-
-    return pygame.Rect(bx, by, BULLET_SIZE, 10)
+def check_in_game_area(unit:pygame.Rect):
+    return 0<=unit.x<WIDTH and 0<=unit.y<HEIGHT
 
 def draw():
     global tank1
     global tank2
+    global bullets
 
     screen.fill(GRASS_GREEN)
 
     screen.blit(tank1, (player1.x, player1.y))
     screen.blit(tank2, (player2.x, player2.y))
 
+    discarded = []
     for bullet in bullets:
         pygame.draw.rect(screen, BLACK, bullet.rect)
 
@@ -88,6 +78,11 @@ def draw():
         bullet.rect.x += dx*VEL_B
         bullet.rect.y += dy*VEL_B
 
+        if not check_in_game_area(bullet.rect):
+            discarded.append(bullet)
+
+    for bullet in discarded:
+        bullets.discard(bullet)
 
     pygame.display.update()
 
