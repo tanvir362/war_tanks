@@ -1,6 +1,8 @@
 import pygame
 from os.path import join
 
+from bullet import Bullet
+
 
 pygame.init()
 
@@ -21,7 +23,7 @@ def get_dir(angle):
 
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Tank Fight")
+pygame.display.set_caption("War of tanks")
 pygame.display.set_icon(
     pygame.image.load(join('assets', 'tank_explosion.png'))
 )
@@ -79,12 +81,13 @@ def draw():
     screen.blit(tank1, (player1.x, player1.y))
     screen.blit(tank2, (player2.x, player2.y))
 
-    for bullet, dir in bullets:
-        pygame.draw.rect(screen, BLACK, bullet)
+    for bullet in bullets:
+        pygame.draw.rect(screen, BLACK, bullet.rect)
 
-        dx , dy = dir
-        bullet.x += dx*VEL_B
-        bullet.y += dy*VEL_B
+        dx , dy = bullet.dir
+        bullet.rect.x += dx*VEL_B
+        bullet.rect.y += dy*VEL_B
+
 
     pygame.display.update()
 
@@ -132,7 +135,7 @@ def move_backward(player, angle):
 
 
 
-bullets = []
+bullets = set()
 
 def main():
     global tank1
@@ -157,13 +160,17 @@ def main():
                     handle_tank2_rotation(event.key)
 
                 if event.key == pygame.K_q:
-                    bullets.append(
-                        (create_bullet(player1, tank1_angle), get_dir(tank1_angle))
+                    bullet = Bullet(player1, tank1_angle)
+                    bullet.set_dir(get_dir(tank1_angle))
+                    bullets.add(
+                        bullet
                     )
 
                 if event.key == pygame.K_SLASH:
-                    bullets.append(
-                        (create_bullet(player2, tank2_angle), get_dir(tank2_angle))
+                    bullet = Bullet(player2, tank2_angle)
+                    bullet.set_dir(get_dir(tank2_angle))
+                    bullets.add(
+                        bullet
                     )
 
         key_pressed = pygame.key.get_pressed()
