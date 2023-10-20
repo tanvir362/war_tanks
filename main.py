@@ -34,25 +34,19 @@ def normalize_angle(angle):
         angle -= 360  # Subtract 360 to get the angle within the range of -180 to 180
     return angle
 
-def true_coord(x, y) -> tuple[float]:
-
-    return (x-TANK_HEIGHT/2, y-TANK_HEIGHT/2)
-
 
 tank1 = pygame.transform.scale(
     pygame.transform.rotate(pygame.image.load(join('assets', 'tank1.png')), -90),
     (TANK_WIDTH, TANK_HEIGHT)
 )
-px, py = true_coord(200, 300)
-player1 = pygame.Rect(px, py, TANK_WIDTH, TANK_HEIGHT)
+player1 = pygame.Rect(100, 100, TANK_WIDTH, TANK_HEIGHT)
 
 
 tank2 = pygame.transform.scale(
     pygame.transform.rotate(pygame.image.load(join('assets', 'tank2.png')), 90),
     (TANK_WIDTH, TANK_HEIGHT)
 )
-px, py = true_coord(800, 300)
-player2 = pygame.Rect(px, py, TANK_WIDTH, TANK_HEIGHT)
+player2 = pygame.Rect(WIDTH-TANK_WIDTH-100, HEIGHT-TANK_HEIGHT-100, TANK_WIDTH, TANK_HEIGHT)
 
 tank1_angle, tank2_angle = 0, 180
 
@@ -192,7 +186,7 @@ def main():
                         bullet
                     )
 
-                if event.key == pygame.K_SLASH:
+                if event.key == pygame.K_RSHIFT:
                     bullet = Bullet(player2, tank2_angle)
                     bullet.set_dir(get_dir(tank2_angle))
                     bullets.add(
