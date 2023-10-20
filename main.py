@@ -8,7 +8,6 @@ pygame.init()
 
 WIDTH, HEIGHT = 1000, 600
 TANK_WIDTH, TANK_HEIGHT = 60, 60
-BULLET_SIZE = 10
 WHITE = (255, 255, 255)
 GRASS_GREEN = (124, 252, 0)
 BLACK = (0, 0, 0)
@@ -75,8 +74,8 @@ def draw():
         pygame.draw.rect(screen, BLACK, bullet.rect)
 
         dx , dy = bullet.dir
-        bullet.rect.x += dx*VEL_B
-        bullet.rect.y += dy*VEL_B
+        bullet.rect.x += dx*Bullet.VEL
+        bullet.rect.y += dy*Bullet.VEL
 
         if not check_in_game_area(bullet.rect):
             discarded.append(bullet)
