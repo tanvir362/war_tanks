@@ -16,6 +16,8 @@ FPS = 60
 VEL = 5
 DAMAGE_UNIT = 10
 
+WINNER_FONT = pygame.font.SysFont('comicsans', 100)
+
 def get_dir(angle):
     movement_dir = {0: (1, 0), 90: (0, -1), 180: (-1, 0), -90: (0, 1)}
 
@@ -78,6 +80,23 @@ health_bar1 = pygame.Rect(10, 10, health1, 10)
 
 health2 = 100
 health_bar2 = pygame.Rect(WIDTH-100-10, 10, health2, 10)
+
+
+def draw_winner(text):
+    text_serf = WINNER_FONT.render(text, 1, WHITE)
+    screen.blit(text_serf, (WIDTH/2 - text_serf.get_width() /2, HEIGHT/2 - text_serf.get_height()/2))
+
+    pygame.display.update()
+    pygame.time.delay(1000)
+
+def handle_gameover():
+    if health1<=0:
+        draw_winner("Player 2 wins")
+        run = False
+
+    if health2<=0:
+        draw_winner("Player 1 wins")
+        run = False
 
 def draw():
     global tank1
@@ -207,6 +226,7 @@ def main():
             move_backward(player=player2, angle=tank2_angle)
 
         draw()
+        handle_gameover()
                 
         
         
