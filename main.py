@@ -11,9 +11,10 @@ TANK_WIDTH, TANK_HEIGHT = 60, 60
 WHITE = (255, 255, 255)
 GRASS_GREEN = (124, 252, 0)
 BLACK = (0, 0, 0)
+BLUE = (0, 0, 255)
 FPS = 60
 VEL = 5
-VEL_B = 20
+DAMAGE_UNIT = 10
 
 def get_dir(angle):
     movement_dir = {0: (1, 0), 90: (0, -1), 180: (-1, 0), -90: (0, 1)}
@@ -59,6 +60,31 @@ tank1_angle, tank2_angle = 0, 180
 def check_in_game_area(unit:pygame.Rect):
     return 0<=unit.x<WIDTH and 0<=unit.y<HEIGHT
 
+def handle_hit(bullet:Bullet):
+    global health1
+    global health2
+    global health_bar1
+    global health_bar2
+
+
+    if bullet.rect.colliderect(player1):
+        health1 -= DAMAGE_UNIT
+        health_bar1.width = health1
+        
+        return True
+    if bullet.rect.colliderect(player2):
+        health2 -= DAMAGE_UNIT
+        health_bar2.width = health2
+        return True
+    
+    return False
+
+health1 = 100
+health_bar1 = pygame.Rect(10, 10, health1, 10)
+
+health2 = 100
+health_bar2 = pygame.Rect(WIDTH-100-10, 10, health2, 10)
+
 def draw():
     global tank1
     global tank2
@@ -80,8 +106,14 @@ def draw():
         if not check_in_game_area(bullet.rect):
             discarded.append(bullet)
 
+        elif handle_hit(bullet):
+            discarded.append(bullet)
+
     for bullet in discarded:
         bullets.discard(bullet)
+
+    pygame.draw.rect(screen, BLUE, health_bar1)
+    pygame.draw.rect(screen, BLUE, health_bar2)
 
     pygame.display.update()
 
